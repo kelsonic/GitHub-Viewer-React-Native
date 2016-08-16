@@ -1,20 +1,27 @@
+// Import Externals
 import React, { Component } from 'react';
 import {
-  View,
   Text,
+  View,
+  Image,
+  StyleSheet,
   TextInput,
   TouchableHighlight,
-  ActivityIndicatorIOS
+  ActivityIndicator
 } from 'react-native';
 
+// Import Internals
 import api from '../../utils/api';
+import Dashboard from '../Dashboard/Dashboard';
+import Profile from '../Profile/Profile';
+import Repositories from '../Repositories/Repositories';
+import Separator from '../Helpers/Separator';
 import styles from './styles';
 
-class Main extends React.Component {
+class Main extends React.Component{
 
-  constructor(props) {
+  constructor(props){
     super(props);
-
     this.state = {
       username: '',
       isLoading: false,
@@ -22,29 +29,29 @@ class Main extends React.Component {
     };
   }
 
-  _handleChange(e) {
+  _handleChange(event){
     this.setState({
-      username: e.nativeEvent.text
+      username: event.nativeEvent.text
     });
   }
 
-  _handleSubmit() {
+  _handleSubmit(){
     this.setState({
       isLoading: true
     });
 
     api.getBio(this.state.username)
       .then((res) => {
-        if (res.message === "Not Found") {
+        if(res.message === 'Not Found'){
           this.setState({
-            error: 'User not found',
+            error: 'Oops, we could not find this GitHub user.',
             isLoading: false
           });
         } else {
           this.props.navigator.push({
-            title: res.name || 'Select an Option',
+            title: res.name || "Select an Option",
             component: Dashboard,
-            passProps: { userInfo: res }
+            passProps: {userInfo: res}
           });
           this.setState({
             isLoading: false,
@@ -56,9 +63,14 @@ class Main extends React.Component {
   }
 
   render() {
+
+    const showErr = this.state.error ? <Text> {this.state.error} </Text> : <View></View>;
+
     return (
-      <View style={styles.mainContainer} >
-        <Text style={styles.title} >View a GitHub User</Text>
+
+      <View style={styles.mainContainer}>
+        <Image source={{uri: 'https://cdn4.iconfinder.com/data/icons/iconsimple-logotypes/512/github-512.png'}} style={styles.image} />
+        <Text style={styles.title}>Find a GitHub User</Text>
         <TextInput
           style={styles.searchInput}
           value={this.state.username}
@@ -67,8 +79,13 @@ class Main extends React.Component {
           style={styles.button}
           onPress={this._handleSubmit.bind(this)}
           underlayColor="white">
-            <Text style={styles.buttonText}>GET PROFILE</Text>
+            <Text style={styles.buttonText}>SEARCH</Text>
         </TouchableHighlight>
+        <ActivityIndicator
+          animating={this.state.isLoading}
+          color="#fff"
+          size="large"></ActivityIndicator>
+        {showErr}
       </View>
     );
   }
