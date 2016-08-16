@@ -4,6 +4,9 @@ This app is built with React Native.
 
 GitHub Viewer allows you to search for GitHub users, browse their public information and repositories, as well as leave notes for each user.
 
+### View the app live
+
+[![GitHub Notetaker](readme-image.png)](https://youtu.be/SnQCfvzQh6U)
 
 ## Installation (MAC OS X)
 
